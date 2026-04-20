@@ -1,7 +1,7 @@
 # UTSmart 🛍️✨
 
 ## Deskripsi Project
-**UTSmart** adalah platform *e-commerce* premium yang berfokus pada produk teknologi, aksesoris, dan *lifestyle*. Proyek ini dibangun dengan antarmuka yang modern, elegan, dan sepenuhnya responsif (*mobile-friendly*). Seluruh fungsionalitas utama berjalan menggunakan Vanilla JavaScript dengan bantuan `localStorage` sebagai media penyimpanan database lokal, sehingga aplikasi ini dapat dijalankan sepenuhnya di sisi klien (*client-side*) tanpa memerlukan server *backend*.
+**UTSmart** adalah platform *e-commerce* premium yang berfokus pada produk teknologi, aksesoris, dan *lifestyle*. Proyek ini dibangun dengan antarmuka yang modern, elegan, dan sepenuhnya responsif (*mobile-friendly*) dengan Tailwind CSS. Seluruh fungsionalitas utama berjalan menggunakan Vanilla JavaScript dengan bantuan `localStorage` sebagai media penyimpanan database lokal, sehingga aplikasi ini dapat dijalankan sepenuhnya di sisi klien (*client-side*) tanpa memerlukan server *backend*.
 
 ## Fitur
 Aplikasi ini dilengkapi dengan berbagai fungsionalitas *e-commerce* lengkap, antara lain:
