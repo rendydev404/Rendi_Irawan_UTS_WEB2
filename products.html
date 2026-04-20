@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | UTSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-bg-primary text-text-primary font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Navigation Placeholder (Simplified for brevity, identical to index) -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 bg-bg-primary border-b border-border">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black tracking-tighter flex items-center gap-2 z-50">
+                <i data-lucide="zap" class="text-accent"></i> UTSmart.
+            </a>
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html" class="text-text-secondary hover:text-accent transition-colors">Home</a>
+                <a href="products.html" class="text-accent transition-colors">Products</a>
+                <a href="wishlist.html" class="hover:text-accent transition-colors">Wishlist</a>
+            </div>
+            <div class="flex items-center space-x-6">
+                <button class="theme-toggle hover:text-text-secondary transition-colors" aria-label="Toggle Theme">
+                    <span class="theme-icon"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+                <a href="cart.html" class="hover:text-text-secondary transition-colors relative">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span id="cart-badge" class="cart-badge hidden">0</span>
+                </a>
+                <div class="w-px h-5 bg-border hidden md:block"></div>
+                <div id="auth-links" class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                    <a href="login.html" class="hover:text-text-secondary transition-colors">Log In</a>
+                </div>
+                <div id="user-menu" class="hidden max-md:hidden relative group md:block">
+                    <button class="flex items-center space-x-2 hover:text-text-secondary transition-colors dropdown-btn">
+                        <i data-lucide="user" class="w-5 h-5"></i><span id="user-greeting" class="text-sm font-medium"></span>
+                    </button>
+                    <!-- Simple Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-bg-secondary dropdown-menu border border-border rounded-xl shadow-2xl opacity-0 invisible   transition-all overflow-hidden z-50">
+                        <a href="orders.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary">Orders</a>
+                        <a href="#" id="logout-btn" class="block px-4 py-3 text-sm text-danger hover:bg-bg-tertiary">Log Out</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Profile Menu -->
+                <div class="md:hidden relative group cursor-pointer">
+                    <button class="flex items-center dropdown-btn">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Mobile Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-bg-secondary dropdown-menu border border-border rounded-xl shadow-2xl opacity-0 invisible   transition-all duration-200 transform origin-top-right scale-95  overflow-hidden z-50">
+                        <a href="index.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Home</a>
+                        <a href="products.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Products</a>
+                        <a href="wishlist.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Wishlist</a>
+                        <a href="orders.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Orders</a>
+                        
+                        <div id="mobile-nav-auth-links" class="mobile-nav-auth">
+                            <a href="login.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Log In</a>
+                            <a href="register.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary">Sign Up</a>
+                        </div>
+                        <a href="#" id="mobile-nav-logout-btn" class="mobile-nav-logout hidden block px-4 py-3 text-sm text-danger hover:bg-bg-tertiary">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-16 px-6 lg:px-12 max-w-7xl mx-auto w-full page-content">
+        
+        <!-- Breadcrumb & Title -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <div class="breadcrumb text-sm text-text-secondary mb-2 flex items-center gap-2">
+                    <a href="index.html">Home</a>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    <span class="text-text-primary font-medium">Products</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight">All Collection</h1>
+            </div>
+            <div class="text-text-secondary text-sm" id="result-count">
+                Showing all results
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Sidebar / Filters -->
+            <aside class="w-full lg:w-64 flex-none space-y-8">
+                <!-- Search -->
+                <div>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary"></i>
+                        <input type="text" id="search-input" placeholder="Search products..." class="w-full bg-bg-secondary border border-border rounded-lg py-2.5 pl-10 pr-4 text-sm focus:border-text-secondary">
+                    </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div>
+                    <h3 class="font-bold mb-4 uppercase tracking-wider text-xs">Categories</h3>
+                    <div class="space-y-2" id="category-filters">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Sort By -->
+                <div>
+                    <h3 class="font-bold mb-4 uppercase tracking-wider text-xs">Sort By</h3>
+                    <select id="sort-select" class="w-full bg-bg-secondary border border-border rounded-lg py-2.5 px-3 text-sm focus:border-text-secondary appearance-none">
+                        <option value="newest">Newest Arrivals</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Top Rated</option>
+                    </select>
+                </div>
+            </aside>
+
+            <!-- Product Grid Area -->
+            <div class="flex-grow">
+                <!-- Grid -->
+                <div id="products-grid" class="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                    <!-- Loaded by JS -->
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-12 flex justify-center items-center gap-2" id="pagination">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Page Logic -->
+    <script>
+        lucide.createIcons();
+
+        const state = {
+            search: '',
+            categories: [],
+            sortBy: 'newest',
+            page: 1,
+            perPage: 9
+        };
+
+        const renderFilters = () => {
+            const categories = [...new Set(Products.allProducts.map(p => p.category))];
+            const filterContainer = document.getElementById('category-filters');
+            
+            // Get category from URL if present
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCat = urlParams.get('cat');
+            if (urlCat && categories.includes(urlCat)) {
+                state.categories.push(urlCat);
+            }
+
+            filterContainer.innerHTML = categories.map(cat => `
+                <label class="flex items-center cursor-pointer group">
+                    <input type="checkbox" value="${cat}" class="category-checkbox w-4 h-4 rounded border-border bg-bg-tertiary text-accent focus:ring-accent focus:ring-offset-bg-secondary"
+                        ${state.categories.includes(cat) ? 'checked' : ''}>
+                    <span class="ml-3 text-sm text-text-secondary group-hover:text-accent transition-colors">${cat}</span>
+                </label>
+            `).join('');
+
+            // Add event listeners to checkboxes
+            document.querySelectorAll('.category-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        state.categories.push(e.target.value);
+                    } else {
+                        state.categories = state.categories.filter(c => c !== e.target.value);
+                    }
+                    state.page = 1; // Reset to page 1
+                    updateProducts();
+                });
+            });
+        };
+
+        const renderProductsUI = (productsToRender) => {
+            const grid = document.getElementById('products-grid');
+            
+            if (productsToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center empty-state border border-border rounded-2xl border-dashed">
+                        <i data-lucide="package-x" class="w-16 h-16 text-border mb-4 mx-auto"></i>
+                        <h3 class="text-xl font-bold mb-2">No products found</h3>
+                        <p class="text-text-secondary">Try adjusting your search or filters.</p>
+                        <button onclick="resetFilters()" class="mt-6 text-sm font-semibold border border-border px-4 py-2 rounded-lg hover:bg-bg-secondary">Clear Filters</button>
+                    </div>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+                document.getElementById('result-count').textContent = 'Showing 0 results';
+                lucide.createIcons();
+                return;
+            }
+
+            // Pagination logic
+            const totalPages = Math.ceil(productsToRender.length / state.perPage);
+            const startIdx = (state.page - 1) * state.perPage;
+            const endIdx = startIdx + state.perPage;
+            const paginatedProducts = productsToRender.slice(startIdx, endIdx);
+
+            // Render products
+            grid.innerHTML = paginatedProducts.map(p => Products.generateCardHTML(p)).join('');
+            
+            // Render pagination
+            renderPagination(totalPages);
+            
+            // Update result count text
+            document.getElementById('result-count').textContent = `Showing ${startIdx + 1}-${Math.min(endIdx, productsToRender.length)} of ${productsToRender.length} results`;
+            
+            lucide.createIcons();
+        };
+
+        const renderPagination = (totalPages) => {
+            const pagContainer = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button onclick="goToPage(${state.page - 1})" class="w-10 h-10 flex items-center justify-center rounded-lg border border-border hover:bg-bg-secondary disabled:opacity-50 disabled:cursor-not-allowed" ${state.page === 1 ? 'disabled' : ''}>
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <button onclick="goToPage(${i})" class="w-10 h-10 flex items-center justify-center rounded-lg ${state.page === i ? 'bg-accent text-bg-primary font-bold' : 'border border-border hover:bg-bg-secondary'}">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            html += `
+                <button onclick="goToPage(${state.page + 1})" class="w-10 h-10 flex items-center justify-center rounded-lg border border-border hover:bg-bg-secondary disabled:opacity-50 disabled:cursor-not-allowed" ${state.page === totalPages ? 'disabled' : ''}>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            pagContainer.innerHTML = html;
+        };
+
+        window.goToPage = (page) => {
+            state.page = page;
+            updateProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.resetFilters = () => {
+            state.search = '';
+            state.categories = [];
+            state.page = 1;
+            document.getElementById('search-input').value = '';
+            document.querySelectorAll('.category-checkbox').forEach(cb => cb.checked = false);
+            updateProducts();
+        };
+
+        const updateProducts = () => {
+            const filtered = Products.filter({
+                search: state.search,
+                categories: state.categories,
+                sortBy: state.sortBy
+            });
+            renderProductsUI(filtered);
+        };
+
+        // Event Listeners for Filters
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            state.search = e.target.value;
+            state.page = 1;
+            updateProducts();
+        });
+
+        document.getElementById('sort-select').addEventListener('change', (e) => {
+            state.sortBy = e.target.value;
+            state.page = 1;
+            updateProducts();
+        });
+
+        // Initialize Page
+        window.addEventListener('products-loaded', () => {
+            renderFilters();
+            updateProducts();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

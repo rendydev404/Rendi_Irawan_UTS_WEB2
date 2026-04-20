@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | UTSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-bg-primary text-text-primary font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full py-4 px-6 md:px-12 border-b border-border bg-bg-primary">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                <i data-lucide="shield" class="text-danger"></i> UTSmart Admin.
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="logout-btn" class="text-sm font-medium text-danger hover:text-accent transition-colors">Log Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-6 lg:px-12 max-w-7xl mx-auto w-full">
+        
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+            <p class="text-text-secondary mt-1">Manage your store operations.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-bg-secondary border border-border rounded-2xl p-6 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-text-secondary">Total Users</div>
+                    <div class="text-2xl font-bold" id="stat-users">0</div>
+                </div>
+            </div>
+            
+            <div class="bg-bg-secondary border border-border rounded-2xl p-6 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-warning/10 text-warning flex items-center justify-center">
+                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-text-secondary">Total Orders</div>
+                    <div class="text-2xl font-bold" id="stat-orders">0</div>
+                </div>
+            </div>
+            
+            <div class="bg-bg-secondary border border-border rounded-2xl p-6 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center">
+                    <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-text-secondary">Total Revenue</div>
+                    <div class="text-2xl font-bold" id="stat-revenue">Rp 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="bg-bg-secondary border border-border rounded-2xl overflow-hidden">
+            <div class="p-6 border-b border-border">
+                <h2 class="text-xl font-bold">Recent Orders</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-bg-tertiary/50 text-xs uppercase tracking-wider text-text-secondary">
+                        <tr>
+                            <th class="py-3 px-4 font-medium">Order ID</th>
+                            <th class="py-3 px-4 font-medium">Customer</th>
+                            <th class="py-3 px-4 font-medium">Date</th>
+                            <th class="py-3 px-4 font-medium">Status</th>
+                            <th class="py-3 px-4 font-medium text-right">Total</th>
+                            <th class="py-3 px-4 font-medium text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+
+
+
+
+

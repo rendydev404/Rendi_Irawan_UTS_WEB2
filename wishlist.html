@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | UTSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-bg-primary text-text-primary font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation Placeholder -->
+    <nav class="w-full py-4 px-6 md:px-12 border-b border-border bg-bg-primary">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black tracking-tighter flex items-center gap-2">
+             UTSmart.
+            </a>
+            <div class="flex items-center space-x-6">
+                <a href="products.html" class="text-sm font-medium hover:text-text-secondary transition-colors">Continue Shopping</a>
+                <button class="theme-toggle hover:text-text-secondary transition-colors" aria-label="Toggle Theme">
+                    <span class="theme-icon"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+                <a href="cart.html" class="relative hover:text-text-secondary transition-colors">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span id="cart-badge" class="cart-badge hidden">0</span>
+                </a>
+                <!-- Mobile Profile Menu -->
+                <div class="md:hidden relative group cursor-pointer">
+                    <button class="flex items-center dropdown-btn">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Mobile Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-bg-secondary dropdown-menu border border-border rounded-xl shadow-2xl opacity-0 invisible   transition-all duration-200 transform origin-top-right scale-95  overflow-hidden z-50">
+                        <a href="index.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Home</a>
+                        <a href="products.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Products</a>
+                        <a href="wishlist.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Wishlist</a>
+                        <a href="orders.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Orders</a>
+                        
+                        <div id="mobile-nav-auth-links">
+                            <a href="login.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Log In</a>
+                            <a href="register.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary">Sign Up</a>
+                        </div>
+                        <a href="#" id="mobile-nav-logout-btn" class="hidden block px-4 py-3 text-sm text-danger hover:bg-bg-tertiary">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-6 lg:px-12 max-w-7xl mx-auto w-full page-content">
+        
+        <h1 class="text-3xl font-bold tracking-tight mb-8">My Wishlist</h1>
+
+        <div id="wishlist-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <!-- Filled by JS -->
+        </div>
+
+    </main>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        lucide.createIcons();
+
+        Auth.requireLogin();
+
+        const renderWishlist = () => {
+            const grid = document.getElementById('wishlist-grid');
+            
+            // Wait for products to be loaded first
+            if (Products.allProducts.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-10 text-center"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto"></i></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            const items = Wishlist.getItems();
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-bg-secondary border border-border rounded-3xl p-12 text-center empty-state">
+                        <i data-lucide="heart" class="w-16 h-16 text-border mb-4 mx-auto"></i>
+                        <h3 class="text-xl font-bold mb-2">Your wishlist is empty</h3>
+                        <p class="text-text-secondary mb-6">Save items you like to your wishlist.</p>
+                        <a href="products.html" class="inline-flex btn-primary bg-accent text-bg-primary font-bold px-6 py-3 rounded-xl">Discover Products</a>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = items.map(p => Products.generateCardHTML(p)).join('');
+            lucide.createIcons();
+            
+            // Force heart icons to be filled red on this page
+            document.querySelectorAll('.heart-icon').forEach(icon => {
+                icon.setAttribute('fill', 'currentColor');
+                icon.closest('button').classList.add('text-danger');
+            });
+        };
+
+        window.addEventListener('products-loaded', renderWishlist);
+        window.addEventListener('wishlist-updated', renderWishlist);
+    </script>
+</body>
+</html>
+
+
+
+
+

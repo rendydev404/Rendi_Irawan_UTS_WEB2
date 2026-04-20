@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | UTSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-bg-primary text-text-primary font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar Minimal for Checkout -->
+    <nav class="w-full py-6 px-6 border-b border-border bg-bg-primary">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                UTSmart.
+            </a>
+            <div class="text-sm font-medium text-text-secondary flex items-center gap-2">
+                <i data-lucide="lock" class="w-4 h-4"></i> Secure Checkout
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-6 max-w-6xl mx-auto w-full page-content">
+        
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <!-- Left Form Area -->
+            <div class="flex-grow">
+                <form id="checkout-form">
+                    
+                    <h2 class="text-xl font-bold mb-6">Shipping Information</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                        <div class="col-span-full">
+                            <label class="block text-sm font-medium mb-2">Full Name</label>
+                            <input type="text" id="ship-name" required class="w-full bg-bg-tertiary border border-border rounded-xl py-3 px-4 focus:border-text-secondary">
+                        </div>
+                        
+                        <div class="col-span-full md:col-span-1">
+                            <label class="block text-sm font-medium mb-2">Phone Number</label>
+                            <input type="tel" id="ship-phone" required class="w-full bg-bg-tertiary border border-border rounded-xl py-3 px-4 focus:border-text-secondary">
+                        </div>
+                        
+                        <div class="col-span-full">
+                            <label class="block text-sm font-medium mb-2">Complete Address</label>
+                            <textarea id="ship-address" required rows="3" class="w-full bg-bg-tertiary border border-border rounded-xl py-3 px-4 focus:border-text-secondary"></textarea>
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl font-bold mb-6 pt-6 border-t border-border">Payment Method</h2>
+                    
+                    <div class="space-y-4 mb-10">
+                        <label class="flex items-center p-4 border border-border rounded-xl cursor-pointer hover:bg-bg-secondary transition-colors group">
+                            <input type="radio" name="payment" value="Bank Transfer" checked class="w-4 h-4 text-accent bg-bg-tertiary border-border focus:ring-accent focus:ring-offset-bg-secondary">
+                            <div class="ml-4 flex items-center gap-3">
+                                <i data-lucide="building" class="w-5 h-5 text-text-secondary group-hover:text-accent"></i>
+                                <span class="font-medium">Bank Transfer (Virtual Account)</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border border-border rounded-xl cursor-pointer hover:bg-bg-secondary transition-colors group">
+                            <input type="radio" name="payment" value="COD" class="w-4 h-4 text-accent bg-bg-tertiary border-border focus:ring-accent focus:ring-offset-bg-secondary">
+                            <div class="ml-4 flex items-center gap-3">
+                                <i data-lucide="truck" class="w-5 h-5 text-text-secondary group-hover:text-accent"></i>
+                                <span class="font-medium">Cash on Delivery (COD)</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full btn-primary bg-accent text-bg-primary font-bold py-4 rounded-xl text-lg flex justify-center items-center gap-2">
+                        Place Order
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- Right Summary Area -->
+            <div class="w-full lg:w-[400px] flex-none">
+                <div class="bg-bg-secondary border border-border rounded-2xl p-6 sticky top-8">
+                    <h2 class="text-lg font-bold mb-6 border-b border-border pb-4">Order Summary</h2>
+                    
+                    <div id="checkout-items" class="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 no-scrollbar">
+                        <!-- Filled by JS -->
+                    </div>
+                    
+                    <div class="border-t border-border pt-4 space-y-3 text-sm mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-text-secondary">Subtotal</span>
+                            <span class="font-medium" id="summary-subtotal">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-success">
+                            <span>Shipping</span>
+                            <span class="font-medium">Free</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-border pt-4 flex justify-between items-end">
+                        <span class="font-bold text-lg">Total</span>
+                        <span class="text-2xl font-black" id="summary-total">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-backdrop hidden">
+        <div class="modal-content bg-bg-secondary border border-border rounded-3xl p-8 max-w-sm w-full text-center relative z-50">
+            <div class="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="check" class="w-10 h-10"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Order Success!</h2>
+            <p class="text-text-secondary text-sm mb-6">Your order has been placed successfully.</p>
+            <div class="bg-bg-tertiary rounded-xl p-4 mb-6">
+                <div class="text-xs text-text-secondary uppercase tracking-wider mb-1">Transaction ID</div>
+                <div class="font-mono font-bold tracking-tight" id="modal-trx-id">TRX-000000-XXXX</div>
+            </div>
+            <a href="orders.html" class="block w-full bg-accent text-bg-primary font-bold py-3 rounded-xl mb-3">View Orders</a>
+            <a href="index.html" class="block w-full text-sm text-text-secondary hover:text-accent">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+
+    <script>
+        lucide.createIcons();
+
+        Auth.requireLogin(() => {
+            // Check cart
+            if (Cart.items.length === 0) {
+                Toast.show('Your cart is empty', 'warning');
+                setTimeout(() => window.location.href = 'products.html', 1500);
+                return;
+            }
+
+            // Pre-fill user data
+            const user = Auth.getCurrentUser();
+            document.getElementById('ship-name').value = user.name || '';
+
+            // Render Summary
+            const itemsContainer = document.getElementById('checkout-items');
+            itemsContainer.innerHTML = Cart.items.map(item => `
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-white rounded-lg overflow-hidden flex-none relative">
+                        <img src="${item.image}" class="w-full h-full object-cover mix-blend-multiply">
+                        <span class="absolute -top-2 -right-2 bg-text-secondary text-bg-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold z-10 border border-white/20">${item.quantity}</span>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-medium text-sm line-clamp-1">${item.name}</h4>
+                        <div class="text-xs text-text-secondary mt-1">${Cart.formatCurrency(item.price)}</div>
+                    </div>
+                    <div class="font-semibold text-sm flex-none">
+                        ${Cart.formatCurrency(item.price * item.quantity)}
+                    </div>
+                </div>
+            `).join('');
+
+            const totals = Cart.getTotals();
+            document.getElementById('summary-subtotal').textContent = Cart.formatCurrency(totals.subtotal);
+            document.getElementById('summary-total').textContent = Cart.formatCurrency(totals.total);
+        });
+
+        // Handle Submit
+        document.getElementById('checkout-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const shippingInfo = {
+                name: document.getElementById('ship-name').value,
+                phone: document.getElementById('ship-phone').value,
+                address: document.getElementById('ship-address').value
+            };
+
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+            setTimeout(() => {
+                const trxId = Checkout.placeOrder(shippingInfo, paymentMethod);
+                
+                if (trxId) {
+                    // Show success modal
+                    document.getElementById('modal-trx-id').textContent = trxId;
+                    const modal = document.getElementById('success-modal');
+                    modal.classList.remove('hidden');
+                } else {
+                    btn.innerHTML = 'Place Order <i data-lucide="check-circle" class="w-5 h-5"></i>';
+                    btn.disabled = false;
+                }
+            }, 1500); // Simulate network
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

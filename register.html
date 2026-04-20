@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | UTSmart</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-shop-pattern text-text-primary font-sans antialiased min-h-screen flex items-center justify-center p-6">
+    
+    <div class="w-full max-w-md bg-bg-secondary/80 backdrop-blur-xl border border-border rounded-3xl p-8 shadow-2xl relative z-10 animate-scale-in my-8">
+        <div class="text-center mb-8">
+            <a href="index.html" class="inline-flex items-center justify-center gap-2 text-3xl font-black tracking-tighter mb-4">
+               UTSmart.
+            </a>
+            <h1 class="text-2xl font-bold">Create an account</h1>
+            <p class="text-text-secondary text-sm mt-2">Join us and experience premium shopping</p>
+        </div>
+
+        <form id="register-form" class="space-y-5">
+            <div>
+                <label for="name" class="block text-sm font-medium mb-1.5">Full Name</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </div>
+                    <input type="text" id="name" name="name" required
+                        class="w-full bg-bg-tertiary border border-border rounded-xl py-3 pl-12 pr-4 focus:border-text-secondary focus:bg-bg-secondary transition-all"
+                        placeholder="John Doe">
+                </div>
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium mb-1.5">Email Address</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                    <input type="email" id="email" name="email" required
+                        class="w-full bg-bg-tertiary border border-border rounded-xl py-3 pl-12 pr-4 focus:border-text-secondary focus:bg-bg-secondary transition-all"
+                        placeholder="you@example.com">
+                </div>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium mb-1.5">Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <input type="password" id="password" name="password" required minlength="6"
+                        class="w-full bg-bg-tertiary border border-border rounded-xl py-3 pl-12 pr-12 focus:border-text-secondary focus:bg-bg-secondary transition-all"
+                        placeholder="Min. 6 characters">
+                </div>
+            </div>
+            
+            <div>
+                <label for="confirm-password" class="block text-sm font-medium mb-1.5">Confirm Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <input type="password" id="confirm-password" name="confirm-password" required minlength="6"
+                        class="w-full bg-bg-tertiary border border-border rounded-xl py-3 pl-12 pr-4 focus:border-text-secondary focus:bg-bg-secondary transition-all"
+                        placeholder="Repeat password">
+                </div>
+                <p id="password-match-error" class="text-danger text-xs mt-1 hidden">Passwords do not match.</p>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit" class="w-full btn-primary bg-accent text-bg-primary font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all flex justify-center items-center gap-2">
+                    Create Account
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-8 text-center text-sm text-text-secondary">
+            Already have an account? 
+            <a href="login.html" class="text-accent font-semibold hover:underline">Log in</a>
+        </div>
+    </div>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <script>
+        lucide.createIcons();
+
+        // Redirect if already logged in
+        if (Auth.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // Form validation & submission
+        const form = document.getElementById('register-form');
+        const pass = document.getElementById('password');
+        const confirmPass = document.getElementById('confirm-password');
+        const errorMsg = document.getElementById('password-match-error');
+
+        confirmPass.addEventListener('input', () => {
+            if (pass.value !== confirmPass.value) {
+                errorMsg.classList.remove('hidden');
+            } else {
+                errorMsg.classList.add('hidden');
+            }
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = pass.value;
+            
+            if (password !== confirmPass.value) {
+                errorMsg.classList.remove('hidden');
+                confirmPass.focus();
+                return;
+            }
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            
+            // Loading state
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Processing...';
+            lucide.createIcons();
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const result = Auth.register(name, email, password);
+                
+                if (result.success) {
+                    Toast.show(result.message, 'success');
+                    // Auto login after register
+                    Auth.login(email, password);
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    Toast.show(result.message, 'error');
+                    // Reset button
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }
+            }, 800); // Simulate network request
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

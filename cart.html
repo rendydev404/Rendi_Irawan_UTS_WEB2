@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | UTSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--bg-primary)',
+                        'bg-secondary': 'var(--bg-secondary)',
+                        'bg-tertiary': 'var(--bg-tertiary)',
+                        'border': 'var(--border)',
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'accent': 'var(--accent)',
+                        'accent-hover': 'var(--accent-hover)',
+                        'success': 'var(--success)',
+                        'warning': 'var(--warning)',
+                        'danger': 'var(--danger)',
+                        'star': 'var(--star)',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-bg-primary text-text-primary font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Navigation Placeholder -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 bg-bg-primary border-b border-border">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black tracking-tighter flex items-center gap-2">
+             UTSmart.
+            </a>
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html" class="text-text-secondary hover:text-accent transition-colors">Home</a>
+                <a href="products.html" class="text-text-secondary hover:text-accent transition-colors">Products</a>
+            </div>
+            <div class="flex items-center space-x-6">
+                <button class="theme-toggle hover:text-text-secondary transition-colors" aria-label="Toggle Theme">
+                    <span class="theme-icon"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                </button>
+                <!-- Desktop User menu placeholder -->
+                <div id="user-menu" class="hidden max-md:hidden relative group md:block">
+                    <button class="flex items-center space-x-2 hover:text-text-secondary transition-colors dropdown-btn">
+                        <i data-lucide="user" class="w-5 h-5"></i><span id="user-greeting" class="text-sm font-medium"></span>
+                    </button>
+                    <!-- Simple Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-bg-secondary dropdown-menu border border-border rounded-xl shadow-2xl opacity-0 invisible   transition-all overflow-hidden z-50">
+                        <a href="orders.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary">Orders</a>
+                        <a href="#" id="logout-btn" class="block px-4 py-3 text-sm text-danger hover:bg-bg-tertiary">Log Out</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Profile Menu -->
+                <div class="md:hidden relative group cursor-pointer">
+                    <button class="flex items-center dropdown-btn">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Mobile Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-bg-secondary dropdown-menu border border-border rounded-xl shadow-2xl opacity-0 invisible   transition-all duration-200 transform origin-top-right scale-95  overflow-hidden z-50">
+                        <a href="index.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Home</a>
+                        <a href="products.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Products</a>
+                        <a href="wishlist.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Wishlist</a>
+                        <a href="orders.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Orders</a>
+                        
+                        <div id="mobile-nav-auth-links">
+                            <a href="login.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary border-b border-border">Log In</a>
+                            <a href="register.html" class="block px-4 py-3 text-sm hover:bg-bg-tertiary">Sign Up</a>
+                        </div>
+                        <a href="#" id="mobile-nav-logout-btn" class="hidden block px-4 py-3 text-sm text-danger hover:bg-bg-tertiary">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-24 pb-16 px-6 lg:px-12 max-w-7xl mx-auto w-full page-content">
+        
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-8">Shopping Cart</h1>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Cart Items -->
+            <div class="flex-grow">
+                <div class="bg-bg-secondary border border-border rounded-2xl p-6" id="cart-container">
+                    <!-- Loaded by JS -->
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="w-full lg:w-80 flex-none" id="summary-container" style="display: none;">
+                <div class="bg-bg-secondary border border-border rounded-2xl p-6 sticky top-28">
+                    <h2 class="text-lg font-bold mb-4 border-b border-border pb-4">Order Summary</h2>
+                    
+                    <div class="space-y-3 text-sm mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-text-secondary">Subtotal</span>
+                            <span class="font-medium" id="summary-subtotal">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-danger hidden" id="discount-row">
+                            <span>Discount</span>
+                            <span class="font-medium" id="summary-discount">- Rp 0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-border pt-4 mb-6 flex justify-between items-end">
+                        <span class="font-bold">Total</span>
+                        <span class="text-xl font-bold" id="summary-total">Rp 0</span>
+                    </div>
+
+                    <a href="checkout.html" class="w-full btn-primary bg-accent text-bg-primary font-bold py-3.5 rounded-xl flex justify-center items-center gap-2">
+                        Proceed to Checkout
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    
+                    <a href="products.html" class="w-full text-center block mt-4 text-sm text-text-secondary hover:text-accent transition-colors">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Core JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        lucide.createIcons();
+
+        // Require login
+        Auth.requireLogin();
+
+        const renderCart = () => {
+            const container = document.getElementById('cart-container');
+            const summaryContainer = document.getElementById('summary-container');
+            
+            if (Cart.items.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center empty-state">
+                        <i data-lucide="shopping-cart" class="w-16 h-16 text-border mb-4 mx-auto"></i>
+                        <h3 class="text-xl font-bold mb-2">Your cart is empty</h3>
+                        <p class="text-text-secondary mb-6">Looks like you haven't added anything to your cart yet.</p>
+                        <a href="products.html" class="inline-flex btn-primary bg-accent text-bg-primary font-bold px-6 py-3 rounded-xl">Start Shopping</a>
+                    </div>
+                `;
+                summaryContainer.style.display = 'none';
+                lucide.createIcons();
+                return;
+            }
+
+            // Render Items
+            container.innerHTML = `
+                <div class="hidden sm:grid grid-cols-12 gap-4 text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 pb-4 border-b border-border">
+                    <div class="col-span-6">Product</div>
+                    <div class="col-span-3 text-center">Quantity</div>
+                    <div class="col-span-3 text-right">Total</div>
+                </div>
+                <div class="space-y-6">
+                    ${Cart.items.map(item => `
+                        <div class="flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center group relative">
+                            <!-- Mobile remove btn -->
+                            <button onclick="Cart.remove(${item.id})" class="sm:hidden absolute top-0 right-0 p-2 text-text-secondary hover:text-danger">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                            
+                            <div class="col-span-6 flex items-center gap-4 w-full">
+                                <div class="w-20 h-20 bg-white rounded-lg overflow-hidden flex-none">
+                                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover mix-blend-multiply">
+                                </div>
+                                <div>
+                                    <h4 class="font-bold line-clamp-1">${item.name}</h4>
+                                    <div class="text-sm text-text-secondary mt-1">${Cart.formatCurrency(item.price)}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-span-3 flex justify-center w-full sm:w-auto mt-4 sm:mt-0">
+                                <div class="flex items-center bg-bg-tertiary rounded-lg p-1 border border-border">
+                                    <button onclick="Cart.updateQuantity(${item.id}, ${item.quantity - 1})" class="qty-btn hover:text-accent text-text-secondary">
+                                        <i data-lucide="minus" class="w-4 h-4"></i>
+                                    </button>
+                                    <span class="w-8 text-center font-medium text-sm">${item.quantity}</span>
+                                    <button onclick="Cart.updateQuantity(${item.id}, ${item.quantity + 1})" class="qty-btn hover:text-accent text-text-secondary">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="col-span-3 flex justify-between sm:justify-end items-center w-full sm:w-auto mt-2 sm:mt-0">
+                                <span class="sm:hidden text-sm text-text-secondary">Total:</span>
+                                <div class="flex items-center gap-4">
+                                    <span class="font-bold">${Cart.formatCurrency(item.price * item.quantity)}</span>
+                                    <!-- Desktop remove btn -->
+                                    <button onclick="Cart.remove(${item.id})" class="hidden sm:block text-text-secondary hover:text-danger p-2 opacity-0  transition-opacity">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Render Summary
+            summaryContainer.style.display = 'block';
+            const totals = Cart.getTotals();
+            
+            document.getElementById('summary-subtotal').textContent = Cart.formatCurrency(totals.subtotal);
+            document.getElementById('summary-total').textContent = Cart.formatCurrency(totals.total);
+            
+            const discountRow = document.getElementById('discount-row');
+            if (totals.discountTotal > 0) {
+                discountRow.classList.remove('hidden');
+                document.getElementById('summary-discount').textContent = `- ${Cart.formatCurrency(totals.discountTotal)}`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
+
+            lucide.createIcons();
+        };
+
+        // Listen for cart updates to re-render
+        window.addEventListener('cart-updated', renderCart);
+        
+        // Initial render
+        renderCart();
+    </script>
+</body>
+</html>
+
+
+
+
+
