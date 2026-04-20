@@ -24,6 +24,4 @@ Karena proyek ini berbasis *client-side* murni (HTML, CSS, JS), Anda dapat menja
 ## Link Demo (GitHub Pages)
 Anda dapat melihat dan mencoba demo aplikasi ini secara langsung tanpa perlu menjalankannya di komputer (Silakan klik tautan di bawah ini):
 
-👉 **[Demo UTSmart di GitHub Pages](https://[USERNAME].github.io/UTS-web/)**
-
-*(Catatan: Ganti tulisan `[USERNAME]` pada tautan di atas dengan *username* GitHub Anda setelah proyek ini di-hosting menggunakan fitur GitHub Pages).*
+👉 **[Demo UTSmart di GitHub Pages](https://rendydev404.github.io/Rendi_Irawan_UTS_WEB2/)**
