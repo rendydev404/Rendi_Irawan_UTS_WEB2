@@ -5,6 +5,8 @@
 
 const Admin = {
     products: [],
+    users: [],
+    _usersPollTimer: null,
 
     init: async () => {
         // Proteksi halaman: hanya admin
@@ -15,11 +17,13 @@ const Admin = {
 
         Admin.setupTabs();
         Admin.setupProductModal();
+        Admin.setupUserModal();
 
         await Admin.loadDashboard();
         await Admin.loadProducts();
         await Admin.loadOrders();
         await Admin.loadUsers();
+        Admin.startUsersPolling();
     },
 
     // ---------- Tabs ----------
@@ -50,6 +54,7 @@ const Admin = {
             document.getElementById('stat-products').textContent = s.totalProducts;
             document.getElementById('stat-orders').textContent = s.totalOrders;
             document.getElementById('stat-revenue').textContent = Cart.formatCurrency(s.totalRevenue);
+            document.getElementById('stat-online').textContent = s.onlineUsers ?? 0;
         } catch (err) {
             Toast.show(err.message, 'error');
         }
@@ -240,26 +245,120 @@ const Admin = {
         const tbody = document.getElementById('users-tbody');
         try {
             const res = await API.get('/api/admin/users');
-            const users = res.data || [];
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-text-secondary">Belum ada pengguna</td></tr>';
+            Admin.users = res.data || [];
+
+            if (Admin.users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-text-secondary">Belum ada pengguna</td></tr>';
                 return;
             }
-            tbody.innerHTML = users
-                .map(
-                    (u) => `
+
+            tbody.innerHTML = Admin.users
+                .map((u) => {
+                    const statusDot = u.isOnline
+                        ? '<span class="inline-flex items-center gap-1.5 text-success text-xs font-bold"><span class="w-2 h-2 rounded-full bg-success inline-block"></span>Online</span>'
+                        : '<span class="inline-flex items-center gap-1.5 text-text-secondary text-xs font-bold"><span class="w-2 h-2 rounded-full bg-border inline-block"></span>Offline</span>';
+                    return `
                 <tr class="border-b border-border hover:bg-bg-tertiary/50">
+                    <td class="py-3 px-4">${statusDot}</td>
                     <td class="py-3 px-4 text-sm font-medium">${u.name}</td>
                     <td class="py-3 px-4 text-sm text-text-secondary">${u.email}</td>
                     <td class="py-3 px-4 text-sm">
                         <span class="px-2 py-1 rounded text-xs font-bold ${u.role === 'admin' ? 'bg-danger/20 text-danger' : 'bg-bg-tertiary text-text-secondary'}">${u.role}</span>
                     </td>
                     <td class="py-3 px-4 text-sm text-text-secondary">${App.formatDate(u.created_at)}</td>
-                </tr>`
-                )
+                    <td class="py-3 px-4 text-right whitespace-nowrap">
+                        <button onclick="Admin.openUserModal('${u.id}')" class="text-accent hover:underline text-sm mr-3">Edit</button>
+                        <button onclick="Admin.deleteUser('${u.id}')" class="text-danger hover:underline text-sm">Hapus</button>
+                    </td>
+                </tr>`;
+                })
                 .join('');
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-danger">${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-danger">${err.message}</td></tr>`;
+        }
+    },
+
+    /** Polling ringan agar status online/offline & dashboard tetap update tanpa reload manual. */
+    startUsersPolling: () => {
+        if (Admin._usersPollTimer) return;
+        Admin._usersPollTimer = setInterval(() => {
+            Admin.loadUsers();
+            Admin.loadDashboard();
+        }, 15000);
+    },
+
+    setupUserModal: () => {
+        document.getElementById('btn-add-user').addEventListener('click', () => Admin.openUserModal());
+        document.getElementById('user-modal-close').addEventListener('click', Admin.closeUserModal);
+        document.getElementById('user-cancel').addEventListener('click', Admin.closeUserModal);
+        document.getElementById('user-form').addEventListener('submit', Admin.saveUser);
+    },
+
+    openUserModal: (id = null) => {
+        const form = document.getElementById('user-form');
+        form.reset();
+        document.getElementById('u-id').value = '';
+        document.getElementById('u-password').required = true;
+        document.getElementById('u-password-hint').textContent = '';
+
+        if (id) {
+            const u = Admin.users.find((x) => String(x.id) === String(id));
+            if (!u) return;
+            document.getElementById('user-modal-title').textContent = 'Edit Pengguna';
+            document.getElementById('u-id').value = u.id;
+            document.getElementById('u-name').value = u.name;
+            document.getElementById('u-email').value = u.email;
+            document.getElementById('u-role').value = u.role;
+            document.getElementById('u-password').required = false;
+            document.getElementById('u-password-hint').textContent = '(kosongkan jika tidak diubah)';
+        } else {
+            document.getElementById('user-modal-title').textContent = 'Tambah Pengguna';
+        }
+
+        document.getElementById('user-modal').classList.remove('hidden');
+    },
+
+    closeUserModal: () => {
+        document.getElementById('user-modal').classList.add('hidden');
+    },
+
+    saveUser: async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('u-id').value;
+        const password = document.getElementById('u-password').value;
+
+        const payload = {
+            name: document.getElementById('u-name').value,
+            email: document.getElementById('u-email').value,
+            role: document.getElementById('u-role').value,
+        };
+        if (password) payload.password = password;
+
+        try {
+            if (id) {
+                await API.put('/api/admin/users/' + id, payload);
+                Toast.show('Pengguna berhasil diperbarui', 'success');
+            } else {
+                await API.post('/api/admin/users', payload);
+                Toast.show('Pengguna berhasil ditambahkan', 'success');
+            }
+            Admin.closeUserModal();
+            await Admin.loadUsers();
+            await Admin.loadDashboard();
+        } catch (err) {
+            Toast.show(err.message, 'error');
+        }
+    },
+
+    deleteUser: async (id) => {
+        if (!confirm('Yakin ingin menghapus pengguna ini?')) return;
+        try {
+            await API.del('/api/admin/users/' + id);
+            Toast.show('Pengguna dihapus', 'success');
+            await Admin.loadUsers();
+            await Admin.loadDashboard();
+        } catch (err) {
+            Toast.show(err.message, 'error');
         }
     },
 };

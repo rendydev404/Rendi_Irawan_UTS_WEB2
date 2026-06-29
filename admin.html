@@ -73,13 +73,20 @@
                 <h1 class="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
                 <p class="text-text-secondary mt-1">Ringkasan operasional toko.</p>
             </div>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                 <div class="bg-bg-secondary border border-border rounded-2xl p-5">
                     <div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">
                         <i data-lucide="users" class="w-5 h-5"></i>
                     </div>
                     <div class="text-sm text-text-secondary">Total Users</div>
                     <div class="text-2xl font-bold" id="stat-users">0</div>
+                </div>
+                <div class="bg-bg-secondary border border-border rounded-2xl p-5">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+                        <i data-lucide="radio" class="w-5 h-5"></i>
+                    </div>
+                    <div class="text-sm text-text-secondary">Sedang Online</div>
+                    <div class="text-2xl font-bold" id="stat-online">0</div>
                 </div>
                 <div class="bg-bg-secondary border border-border rounded-2xl p-5">
                     <div class="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center mb-3">
@@ -161,19 +168,26 @@
 
         <!-- ===== PENGGUNA ===== -->
         <section id="section-users" class="admin-section hidden">
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold tracking-tight">Daftar Pengguna</h1>
-                <p class="text-text-secondary mt-1">Pengguna terdaftar di toko.</p>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Manajemen Pengguna</h1>
+                    <p class="text-text-secondary mt-1">Tambah, edit, hapus pengguna. Status online diperbarui otomatis.</p>
+                </div>
+                <button id="btn-add-user" class="btn-primary bg-accent text-bg-primary font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 justify-center">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Pengguna
+                </button>
             </div>
             <div class="bg-bg-secondary border border-border rounded-2xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="bg-bg-tertiary/50 text-xs uppercase tracking-wider text-text-secondary">
                             <tr>
+                                <th class="py-3 px-4 font-medium">Status</th>
                                 <th class="py-3 px-4 font-medium">Nama</th>
                                 <th class="py-3 px-4 font-medium">Email</th>
                                 <th class="py-3 px-4 font-medium">Role</th>
                                 <th class="py-3 px-4 font-medium">Terdaftar</th>
+                                <th class="py-3 px-4 font-medium text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="users-tbody"></tbody>
@@ -241,6 +255,42 @@
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" id="product-cancel" class="flex-1 border border-border font-medium py-3 rounded-xl hover:bg-bg-tertiary">Batal</button>
+                    <button type="submit" class="flex-1 btn-primary bg-accent text-bg-primary font-bold py-3 rounded-xl">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal (Tambah/Edit) -->
+    <div id="user-modal" class="modal-backdrop hidden">
+        <div class="modal-content bg-bg-secondary border border-border rounded-3xl p-6 max-w-md w-full relative z-50 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold" id="user-modal-title">Tambah Pengguna</h2>
+                <button id="user-modal-close" class="text-text-secondary hover:text-danger"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="user-form" class="space-y-4">
+                <input type="hidden" id="u-id">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Nama</label>
+                    <input type="text" id="u-name" required class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Email</label>
+                    <input type="email" id="u-email" required class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Password <span id="u-password-hint" class="text-text-secondary font-normal"></span></label>
+                    <input type="password" id="u-password" class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4" placeholder="Min. 6 karakter">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Role</label>
+                    <select id="u-role" class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4">
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="user-cancel" class="flex-1 border border-border font-medium py-3 rounded-xl hover:bg-bg-tertiary">Batal</button>
                     <button type="submit" class="flex-1 btn-primary bg-accent text-bg-primary font-bold py-3 rounded-xl">Simpan</button>
                 </div>
             </form>
