@@ -246,8 +246,17 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1.5">URL Gambar</label>
-                    <input type="url" id="p-image" class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4" placeholder="https://...">
+                    <label class="block text-sm font-medium mb-1.5">Gambar Produk</label>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div id="p-image-preview" class="w-16 h-16 rounded-lg bg-bg-tertiary border border-border overflow-hidden flex-none flex items-center justify-center text-text-secondary">
+                            <i data-lucide="image" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <input type="file" id="p-image-file" accept="image/jpeg,image/png,image/webp,image/gif" class="w-full text-sm text-text-secondary file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-accent file:text-bg-primary file:font-bold file:cursor-pointer">
+                            <p id="p-image-status" class="text-xs text-text-secondary mt-1"></p>
+                        </div>
+                    </div>
+                    <input type="url" id="p-image" class="w-full bg-bg-tertiary border border-border rounded-xl py-2.5 px-4" placeholder="https://... (atau upload di atas)">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1.5">Deskripsi</label>

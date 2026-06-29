@@ -106,12 +106,41 @@ const Admin = {
         document.getElementById('product-modal-close').addEventListener('click', Admin.closeProductModal);
         document.getElementById('product-cancel').addEventListener('click', Admin.closeProductModal);
         document.getElementById('product-form').addEventListener('submit', Admin.saveProduct);
+        document.getElementById('p-image-file').addEventListener('change', Admin.handleImageUpload);
+    },
+
+    updateImagePreview: (url) => {
+        const preview = document.getElementById('p-image-preview');
+        preview.innerHTML = url
+            ? `<img src="${url}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i data-lucide=\\'image-off\\' class=\\'w-6 h-6\\'></i>';lucide.createIcons();">`
+            : `<i data-lucide="image" class="w-6 h-6"></i>`;
+        lucide.createIcons();
+    },
+
+    handleImageUpload: async (e) => {
+        const file = e.target.files[0];
+        const status = document.getElementById('p-image-status');
+        if (!file) return;
+
+        status.textContent = 'Mengupload...';
+        try {
+            const res = await API.upload('/api/upload', file);
+            document.getElementById('p-image').value = res.url;
+            Admin.updateImagePreview(res.url);
+            status.textContent = 'Upload berhasil ✓';
+            Toast.show('Gambar berhasil diupload', 'success');
+        } catch (err) {
+            status.textContent = '';
+            Toast.show(err.message || 'Upload gagal', 'error');
+        }
     },
 
     openProductModal: (id = null) => {
         const form = document.getElementById('product-form');
         form.reset();
         document.getElementById('p-id').value = '';
+        document.getElementById('p-image-status').textContent = '';
+        Admin.updateImagePreview('');
 
         if (id) {
             const p = Admin.products.find((x) => x.id === id);
@@ -128,6 +157,7 @@ const Admin = {
             document.getElementById('p-badge').value = p.badge || '';
             document.getElementById('p-image').value = p.image || '';
             document.getElementById('p-description').value = p.description || '';
+            Admin.updateImagePreview(p.image || '');
         } else {
             document.getElementById('product-modal-title').textContent = 'Tambah Produk';
         }

@@ -59,4 +59,33 @@ const API = {
   del(path, opts) {
     return API.request('DELETE', path, null, opts);
   },
+
+  /** Upload file (multipart/form-data). Tidak set Content-Type agar browser isi boundary otomatis. */
+  async upload(path, file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const headers = {};
+    const token = API.getToken();
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+
+    let res;
+    try {
+      res = await fetch(API.baseUrl + path, { method: 'POST', headers, body: formData });
+    } catch (err) {
+      throw new Error('Tidak bisa terhubung ke server. Pastikan backend berjalan.');
+    }
+
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (_) {}
+
+    if (!res.ok) {
+      const error = new Error(data.message || `Upload gagal (${res.status})`);
+      error.status = res.status;
+      throw error;
+    }
+    return data;
+  },
 };
