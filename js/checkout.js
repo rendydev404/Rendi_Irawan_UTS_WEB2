@@ -6,8 +6,9 @@ const Checkout = {
 
     /**
      * Membuat order via API backend. Backend menghitung ulang total,
-     * mengurangi stok, dan mengirim notifikasi ke WhatsApp owner (Fonnte).
-     * @returns {Promise<string|false>} orderId jika sukses, false jika gagal.
+     * mengurangi stok, dan mengembalikan link WhatsApp (wa.me) berisi
+     * detail pesanan untuk dikirim customer ke owner.
+     * @returns {Promise<{orderId:string, whatsappUrl:string|null}|false>}
      */
     placeOrder: async (shippingInfo, paymentMethod) => {
         if (!Auth.isLoggedIn()) return false;
@@ -28,7 +29,7 @@ const Checkout = {
             const res = await API.post('/api/checkout', payload);
             // Clear Cart setelah order berhasil
             Cart.clear();
-            return res.orderId;
+            return { orderId: res.orderId, whatsappUrl: res.whatsappUrl || null };
         } catch (err) {
             Toast.show(err.message || 'Gagal membuat order', 'error');
             return false;

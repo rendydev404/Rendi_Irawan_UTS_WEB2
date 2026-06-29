@@ -142,6 +142,9 @@
                 <div class="text-xs text-text-secondary uppercase tracking-wider mb-1">Transaction ID</div>
                 <div class="font-mono font-bold tracking-tight" id="modal-trx-id">TRX-000000-XXXX</div>
             </div>
+            <a id="modal-wa-btn" href="#" target="_blank" rel="noopener" class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl mb-3 flex items-center justify-center gap-2 hidden">
+                <i data-lucide="message-circle" class="w-5 h-5"></i> Konfirmasi via WhatsApp
+            </a>
             <a href="orders.html" class="block w-full bg-accent text-bg-primary font-bold py-3 rounded-xl mb-3">View Orders</a>
             <a href="index.html" class="block w-full text-sm text-text-secondary hover:text-accent">Back to Home</a>
         </div>
@@ -212,13 +215,24 @@
             const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
             (async () => {
-                const trxId = await Checkout.placeOrder(shippingInfo, paymentMethod);
+                const result = await Checkout.placeOrder(shippingInfo, paymentMethod);
 
-                if (trxId) {
+                if (result && result.orderId) {
                     // Show success modal
-                    document.getElementById('modal-trx-id').textContent = trxId;
+                    document.getElementById('modal-trx-id').textContent = result.orderId;
+
+                    // Siapkan tombol konfirmasi WhatsApp ke owner
+                    const waBtn = document.getElementById('modal-wa-btn');
+                    if (result.whatsappUrl) {
+                        waBtn.href = result.whatsappUrl;
+                        waBtn.classList.remove('hidden');
+                        // Buka WhatsApp otomatis di tab baru
+                        window.open(result.whatsappUrl, '_blank');
+                    }
+
                     const modal = document.getElementById('success-modal');
                     modal.classList.remove('hidden');
+                    lucide.createIcons();
                 } else {
                     btn.innerHTML = 'Place Order <i data-lucide="check-circle" class="w-5 h-5"></i>';
                     lucide.createIcons();
