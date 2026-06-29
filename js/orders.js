@@ -7,27 +7,34 @@ const Orders = {
         // Initialization
     },
 
-    getUserOrders: () => {
+    /** Order milik user yang login (admin mendapat semua order dari backend). */
+    getUserOrders: async () => {
         if (!Auth.isLoggedIn()) return [];
-        const allOrders = Storage.get(STORAGE_KEYS.ORDERS) || [];
-        // Sort by date desc
-        return allOrders.filter(o => o.userId === Auth.session.id).sort((a, b) => new Date(b.date) - new Date(a.date));
-    },
-
-    getOrderById: (orderId) => {
-        const orders = Storage.get(STORAGE_KEYS.ORDERS) || [];
-        return orders.find(o => o.id === orderId);
-    },
-
-    updateOrderStatus: (orderId, newStatus) => {
-        const orders = Storage.get(STORAGE_KEYS.ORDERS) || [];
-        const orderIndex = orders.findIndex(o => o.id === orderId);
-        
-        if (orderIndex !== -1) {
-            orders[orderIndex].status = newStatus;
-            Storage.set(STORAGE_KEYS.ORDERS, orders);
-            return true;
+        try {
+            const res = await API.get('/api/orders');
+            return res.data || [];
+        } catch (err) {
+            if (typeof Toast !== 'undefined') Toast.show(err.message, 'error');
+            return [];
         }
-        return false;
+    },
+
+    getOrderById: async (orderId) => {
+        try {
+            const res = await API.get('/api/orders/' + encodeURIComponent(orderId));
+            return res.data;
+        } catch (err) {
+            return null;
+        }
+    },
+
+    updateOrderStatus: async (orderId, newStatus) => {
+        try {
+            await API.put('/api/orders/' + encodeURIComponent(orderId) + '/status', { status: newStatus });
+            return true;
+        } catch (err) {
+            if (typeof Toast !== 'undefined') Toast.show(err.message, 'error');
+            return false;
+        }
     }
 };

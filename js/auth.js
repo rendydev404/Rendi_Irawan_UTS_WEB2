@@ -37,65 +37,37 @@ const Auth = {
         return Auth.session;
     },
 
-    isEmailUnique: (email) => {
-        const users = Storage.get(STORAGE_KEYS.USERS) || [];
-        return !users.some(user => user.email === email);
+    /**
+     * Register a new user (via API)
+     */
+    register: async (name, email, password) => {
+        try {
+            const res = await API.post('/api/auth/register', { name, email, password }, { auth: false });
+            if (res.token) {
+                Storage.set(STORAGE_KEYS.TOKEN, res.token);
+                Auth.session = res.user;
+                Storage.set(STORAGE_KEYS.SESSION, res.user);
+            }
+            return { success: true, message: res.message || 'Registration successful', isAdmin: false };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
     },
 
     /**
-     * Register a new user
+     * Login an existing user (via API)
      */
-    register: (name, email, password) => {
-        if (!Auth.isEmailUnique(email)) {
-            return { success: false, message: 'Email already registered' };
-        }
-
-        const newUser = {
-            id: Date.now().toString(),
-            name,
-            email,
-            password, // Note: Storing plain text password for this UTS simulation
-            role: 'user', // Default role
-            createdAt: new Date().toISOString()
-        };
-
-        const users = Storage.get(STORAGE_KEYS.USERS) || [];
-        users.push(newUser);
-        Storage.set(STORAGE_KEYS.USERS, users);
-
-        return { success: true, message: 'Registration successful' };
-    },
-
-    /**
-     * Login an existing user
-     */
-    login: (email, password) => {
-        // Admin hardcoded check (Bonus)
-        if (email === 'admin@utsmart.com' && password === 'admin123') {
-             const adminUser = {
-                id: 'admin',
-                name: 'Administrator',
-                email: 'admin@utsmart.com',
-                role: 'admin'
-            };
-            Auth.session = adminUser;
-            Storage.set(STORAGE_KEYS.SESSION, adminUser);
-            return { success: true, message: 'Admin login successful', isAdmin: true };
-        }
-
-        const users = Storage.get(STORAGE_KEYS.USERS) || [];
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (user) {
-            // Don't store password in session
-            const { password: _, ...userWithoutPassword } = user;
-            Auth.session = userWithoutPassword;
-            Storage.set(STORAGE_KEYS.SESSION, userWithoutPassword);
+    login: async (email, password) => {
+        try {
+            const res = await API.post('/api/auth/login', { email, password }, { auth: false });
+            Storage.set(STORAGE_KEYS.TOKEN, res.token);
+            Auth.session = res.user;
+            Storage.set(STORAGE_KEYS.SESSION, res.user);
             Auth.updateUI();
-            return { success: true, message: 'Login successful', isAdmin: false };
+            return { success: true, message: res.message || 'Login successful', isAdmin: !!res.isAdmin };
+        } catch (err) {
+            return { success: false, message: err.message };
         }
-
-        return { success: false, message: 'Invalid email or password' };
     },
 
     /**
@@ -104,6 +76,7 @@ const Auth = {
     logout: () => {
         Auth.session = null;
         Storage.remove(STORAGE_KEYS.SESSION);
+        Storage.remove(STORAGE_KEYS.TOKEN);
         Auth.updateUI();
         
         // Clear sensitive data on logout

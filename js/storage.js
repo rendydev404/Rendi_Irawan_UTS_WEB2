@@ -3,6 +3,7 @@
 const STORAGE_KEYS = {
     USERS: 'utsmart_users',
     SESSION: 'utsmart_session',
+    TOKEN: 'utsmart_token',
     CART: 'utsmart_cart',
     ORDERS: 'utsmart_orders',
     WISHLIST: 'utsmart_wishlist',

@@ -110,6 +110,8 @@
 
     <!-- Core JS -->
     <script src="js/storage.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/toast.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
@@ -157,13 +159,12 @@
             lucide.createIcons();
             btn.disabled = true;
 
-            setTimeout(() => {
-                const result = Auth.register(name, email, password);
-                
+            (async () => {
+                const result = await Auth.register(name, email, password);
+
                 if (result.success) {
                     Toast.show(result.message, 'success');
-                    // Auto login after register
-                    Auth.login(email, password);
+                    // Register API sudah otomatis login (token tersimpan)
                     setTimeout(() => {
                         window.location.href = 'index.html';
                     }, 1500);
@@ -171,9 +172,10 @@
                     Toast.show(result.message, 'error');
                     // Reset button
                     btn.innerHTML = originalContent;
+                    lucide.createIcons();
                     btn.disabled = false;
                 }
-            }, 800); // Simulate network request
+            })();
         });
     </script>
 </body>

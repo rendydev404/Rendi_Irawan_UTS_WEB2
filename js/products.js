@@ -14,19 +14,17 @@ const Products = {
      */
     fetchProducts: async () => {
         try {
-            const response = await fetch('data/products.json');
-            if (!response.ok) throw new Error('Failed to load products');
-            
-            const data = await response.json();
+            const res = await API.get('/api/products', { auth: false });
+            const data = res.data || [];
             Products.allProducts = data;
-            
+
             // Dispatch event when products are ready
             window.dispatchEvent(new Event('products-loaded'));
             return data;
         } catch (error) {
             console.error('Error fetching products:', error);
             if (typeof Toast !== 'undefined') {
-                Toast.show('Error loading products data', 'error');
+                Toast.show(error.message || 'Error loading products data', 'error');
             }
             return [];
         }
