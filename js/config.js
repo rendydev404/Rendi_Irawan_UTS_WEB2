@@ -6,7 +6,7 @@
  * dengan Base URL backend Railway kamu, mis. https://utsmart-api.up.railway.app
  */
 (function () {
-  const PROD_API_URL = 'https://GANTI-DENGAN-URL-RAILWAY.up.railway.app';
+  const PROD_API_URL = 'https://backend-production-e5c6.up.railway.app';
 
   const host = window.location.hostname;
   const isLocal =
